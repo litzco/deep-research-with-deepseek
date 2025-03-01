@@ -1,5 +1,6 @@
 import { createOpenAI, type OpenAIProviderSettings } from '@ai-sdk/openai';
 import { getEncoding } from 'js-tiktoken';
+import { wrapLanguageModel, type LanguageModelV1 } from 'ai';
 
 import { RecursiveCharacterTextSplitter } from './text-splitter';
 
@@ -59,4 +60,24 @@ export function trimPrompt(
 
   // recursively trim until the prompt is within the context size
   return trimPrompt(trimmedPrompt, contextSize);
+}
+
+export const applyMiddleware = (model: LanguageModelV1) => {
+  return wrapLanguageModel({
+    model: model,
+    middleware: {
+      wrapGenerate: async ({ doGenerate }) => {
+        const result = await doGenerate();
+        if (!result.text) return result;
+    
+        const matched = result.text.match(/```json\n(.*)\n```/ms); // Extract JSON content
+        if (matched) {
+          result.text = matched[1];
+        } else {
+          console.error("Failed to extract JSON content from LM response");
+        }
+        return result;
+      },
+    },
+  })
 }

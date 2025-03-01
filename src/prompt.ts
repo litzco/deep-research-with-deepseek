@@ -13,3 +13,47 @@ export const systemPrompt = () => {
   - Consider new technologies and contrarian ideas, not just the conventional wisdom.
   - You may use high levels of speculation or prediction, just flag it for me.`;
 };
+
+export const feedbackOutputPrompt = () => `
+  EXAMPLE JSON OUTPUT:
+  {
+      "questions": [ "question 1", "question 2"]
+  }
+`.trim()
+
+export const serpQueryOutputPrompt = () => `
+  Output must include the SERP query and research goal. To determine research goal, first talk about the goal of the research that this query is meant to accomplish, then go deeper into how to advance the research once the results are found, mention additional research directions. Be as specific as possible, especially for additional research directions.
+
+  EXAMPLE JSON OUTPUT:
+  {
+      "queries": [
+          {
+              "query": "query 1",
+              "researchGoal: "research goal 1"
+          },
+          {
+              "query": "query 2",
+              "researchGoal: "research goal 2
+          }
+      ]
+  }
+`.trim()
+
+export const serpResultOutputPrompt = (numFollowUpQuestions: number) => `
+  Output must include list of learnings and follow-up questions to research the topic further. Follow-up questions must be max of ${numFollowUpQuestions}.
+
+  EXAMPLE JSON OUTPUT:
+  {
+      {
+          "learnings": ["learning 1", "learning 2"],
+          "followUpQuestions": ["question 1", "question 2"]
+      }
+  }
+`.trim()
+
+export const finalReportOutputPrompt = () => `
+  EXAMPLE JSON OUTPUT:
+  {
+      "reportMarkdown": "report content"
+  }
+`.trim()
